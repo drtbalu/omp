@@ -1,0 +1,82 @@
+/**
+ * @file styles/pages/catalog.less
+ *
+ * Copyright (c) 2003-2012 John Willinsky
+ * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
+ *
+ * @brief Styles for the public catalog
+ *
+ */
+
+.pkp_catalog_carousel {
+	width: 33%;
+
+	img {
+		/* Other images will show through during scroll unless opaque */
+		background: #fff;
+	}
+}
+
+.pkp_catalog_seriesDescription, .pkp_catalog_categoryDescription {
+	float: right;
+	margin-left: 250px; /* Make room for the carousel */
+	border-top: 1px dotted #999999;
+	padding-top: 10px;
+}
+
+.pkp_catalog_monographs {
+	clear: both;
+	border-top: 1px dotted #999999;
+	padding-top: 10px;
+	font-size: 0.9em;	
+
+	.pkp_catalog_monograph {
+		width: 150px;
+		float: left;
+		margin: 3px 10px 3px 0;
+		color: #999;
+
+		.pkp_catalog_monograph_authorship {
+			padding-bottom: 2px;
+			padding-top: 2px;
+		}
+
+		.pkp_catalog_monograph_date {
+			padding-top: 10px;
+			padding-top: 5px;
+		}
+	}
+}
+
+.pkp_catalog_feature {
+	border-top: 1px dotted #999999;
+	padding-top: 10px;
+	margin-left: 10px;
+
+	.pkp_catalog_featureSpecs {
+		float: left;
+	}
+
+	.pkp_catalog_featureDetails {
+		margin-top: 50px;
+	}
+}
+
+.pkp_catalog_book {
+	.bookSpecs {
+		float: left;
+		width: 33%;
+		overflow: hidden;
+	}
+
+	.bookInfo {
+		/* Floated to keep tab interface from messing up */
+		float: right;
+		width: 67%;
+
+		.publicationFormatName {
+			float: left;
+			width: 75%;
+		}
+	}
+}

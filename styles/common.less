@@ -1,0 +1,60 @@
+/**
+ * @file styles/common.less
+ *
+ * Copyright (c) 2003-2012 John Willinsky
+ * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
+ * 
+ * @brief Styles for common templates.
+ *
+ */
+
+.pkp_common_reviewRoundStatusContainer {
+	height: 40px;
+	margin: 11px;
+	border: 2px solid black;
+	background-color: #FFFFDD;
+}
+
+.pkp_common_submissionHeaderHeading {
+	font-size: 1.7em;
+	color: #20538D;
+	vertical-align: middle;
+	float: left;
+}
+a.pkp_common_disabled,
+a.pkp_common_disabled:hover {
+	color: #666;
+}
+
+.button.ui-state-default,
+.ui-button {
+	background: #0C3B66 url(../templates/images/button_bg_slice.png) repeat-x !important;
+	/**
+	 * !important elements needed in the event CSS application order
+	 * vis-a-vis jQueryUI is reversed (see editor decision actions in the
+	 * review interface in OMP)
+	 */
+	color: white !important;
+	border-style: none !important;
+	border-color: white !important;
+	border-width: 0 0 0 0 !important;
+	font-weight: normal !important;
+	font-family: Arial, helvetica, Courier !important;
+	font-size: 12px !important;
+}
+
+.button.ui-state-hover,
+.ui-button.ui-state-hover, 
+.button.ui-state-active,
+.ui-button.ui-state-active {
+	background: #0C3B66 url(../templates/images/button_bg_slice_hover.png) repeat-x !important;
+	/**
+	 * !important elements needed in the event CSS application order
+	 * vis-a-vis jQueryUI is reversed (see editor decision actions in the
+	 * review interface in OMP)
+	 */
+	color: white !important;
+	border-style: none !important;
+	border-color: white !important;
+	border-width: 0 0 0 0 !important;
+}

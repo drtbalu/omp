@@ -1,0 +1,1963 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE schema SYSTEM "../../lib/pkp/dtd/xmlSchema.dtd">
+
+<!--
+  * omp_schema.xml
+  *
+  * Copyright (c) 2003-2012 John Willinsky
+  * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
+  *
+  * OMP database schema in XML.
+  -->
+
+<schema version="0.2">
+
+	<!--
+	  *
+	  * TABLE categories
+	  *
+	  -->
+	<table name="categories">
+		<field name="category_id" type="I8">
+			<KEY />
+			<AUTOINCREMENT />
+		</field>
+		<field name="press_id" type="I8">
+			<NOTNULL/>
+		</field>
+		<field name="parent_id" type="I8">
+			<NOTNULL/>
+		</field>
+		<field name="path" type="C2" size="255">
+			<NOTNULL />
+		</field>
+		<descr>Press categories.</descr>
+		<index name="category_press_id">
+			<col>press_id</col>
+			<col>parent_id</col>
+		</index>
+		<index name="category_path">
+			<col>press_id</col>
+			<col>path</col>
+			<UNIQUE />
+		</index>
+	</table>
+
+	<!--
+	  *
+	  * TABLE category_settings
+	  *
+	  -->
+	<table name="category_settings">
+		<field name="category_id" type="I8">
+			<NOTNULL />
+		</field>
+		<field name="locale" type="C2" size="5">
+			<NOTNULL />
+			<DEFAULT VALUE=""/>
+		</field>
+		<field name="setting_name" type="C2" size="255">
+			<NOTNULL />
+		</field>
+		<field name="setting_value" type="X"/>
+		<field name="setting_type" type="C2" size="6">
+			<NOTNULL/>
+			<descr>(bool|int|float|string|object)</descr>
+		</field>
+		<descr>Category-specific settings</descr>
+		<index name="category_settings_pkey">
+			<col>category_id</col>
+			<col>locale</col>
+			<col>setting_name</col>
+			<UNIQUE />
+		</index>
+	</table>
+
+	<!--
+	  *
+	  * TABLE footer_categories
+	  *
+	  -->
+	<table name="footer_categories">
+		<field name="footer_category_id" type="I8">
+			<KEY />
+			<AUTOINCREMENT />
+		</field>
+		<field name="press_id" type="I8">
+			<NOTNULL/>
+		</field>
+		<field name="path" type="C2" size="255">
+			<NOTNULL />
+		</field>
+		<descr>Press Footer Link categories.</descr>
+		<index name="category_press_id">
+			<col>press_id</col>
+		</index>
+		<index name="category_path">
+			<col>press_id</col>
+			<col>path</col>
+			<UNIQUE />
+		</index>
+	</table>
+
+	<!--
+	  *
+	  * TABLE footer_category_settings
+	  *
+	  -->
+	<table name="footer_category_settings">
+		<field name="footer_category_id" type="I8">
+			<NOTNULL />
+		</field>
+		<field name="locale" type="C2" size="5">
+			<NOTNULL />
+			<DEFAULT VALUE=""/>
+		</field>
+		<field name="setting_name" type="C2" size="255">
+			<NOTNULL />
+		</field>
+		<field name="setting_value" type="X"/>
+		<field name="setting_type" type="C2" size="6">
+			<NOTNULL/>
+			<descr>(bool|int|float|string|object)</descr>
+		</field>
+		<descr>Footer Category-specific settings</descr>
+		<index name="footer_category_settings_pkey">
+			<col>footer_category_id</col>
+			<col>locale</col>
+			<col>setting_name</col>
+			<UNIQUE />
+		</index>
+	</table>
+	
+	<!--
+	  *
+	  * TABLE footerlinks
+	  *
+	  -->
+	<table name="footerlinks">
+		<field name="footerlink_id" type="I8">
+			<KEY />
+			<AUTOINCREMENT />
+		</field>
+		<field name="press_id" type="I8">
+			<NOTNULL/>
+		</field>
+		<field name="footer_category_id" type="I8">
+			<NOTNULL/>
+		</field>
+		<field name="url" type="C2" size="255">
+			<NOTNULL />
+		</field>
+		<descr>Press Footer Links.</descr>
+		<index name="footerlink_press_id">
+			<col>press_id</col>
+		</index>
+	</table>
+
+	<!--
+	  *
+	  * TABLE footerlink_settings
+	  *
+	  -->
+	<table name="footerlink_settings">
+		<field name="footerlink_id" type="I8">
+			<NOTNULL />
+		</field>
+		<field name="locale" type="C2" size="5">
+			<NOTNULL />
+			<DEFAULT VALUE=""/>
+		</field>
+		<field name="setting_name" type="C2" size="255">
+			<NOTNULL />
+		</field>
+		<field name="setting_value" type="X"/>
+		<field name="setting_type" type="C2" size="6">
+			<NOTNULL/>
+			<descr>(bool|int|float|string|object)</descr>
+		</field>
+		<descr>Footer Link settings</descr>
+		<index name="footerlinks_settings_pkey">
+			<col>footerlink_id</col>
+			<col>locale</col>
+			<col>setting_name</col>
+			<UNIQUE />
+		</index>
+	</table>
+
+	<!--
+	  *
+	  * TABLE social_media
+	  *
+	  -->
+	<table name="social_media">
+		<field name="social_media_id" type="I8">
+			<KEY />
+			<AUTOINCREMENT />
+		</field>
+		<field name="press_id" type="I8">
+			<NOTNULL/>
+		</field>
+		<field name="code" type="X">
+			<NOTNULL />
+		</field>
+		<field name="include_in_catalog" type="I2"/>
+		<descr>Social Media code blocks</descr>
+		<index name="social_media_press_id">
+			<col>press_id</col>
+		</index>
+	</table>
+
+	<!--
+	  *
+	  * TABLE social_media_settings
+	  *
+	  -->
+	<table name="social_media_settings">
+		<field name="social_media_id" type="I8">
+			<NOTNULL />
+		</field>
+		<field name="locale" type="C2" size="5">
+			<NOTNULL />
+			<DEFAULT VALUE=""/>
+		</field>
+		<field name="setting_name" type="C2" size="255">
+			<NOTNULL />
+		</field>
+		<field name="setting_value" type="X"/>
+		<field name="setting_type" type="C2" size="6">
+			<NOTNULL/>
+			<descr>(bool|int|float|string|object)</descr>
+		</field>
+		<descr>Social Media settings</descr>
+		<index name="social_media_settings_pkey">
+			<col>social_media_id</col>
+			<col>locale</col>
+			<col>setting_name</col>
+			<UNIQUE />
+		</index>
+	</table>
+
+	<!--
+	  *
+	  * TABLE identification_codes
+	  *
+	  -->
+	<table name="identification_codes">
+		<field name="identification_code_id" type="I8">
+			<KEY />
+			<AUTOINCREMENT />
+		</field>
+		<field name="publication_format_id" type="I8">
+			<NOTNULL />
+		</field>
+		<field name="code" type="C2" size="40">
+			<NOTNULL />
+		</field>
+		<field name="value" type="C2" size="255">
+			<NOTNULL />
+		</field>
+		<index name="identification_codes_key">
+			<col>identification_code_id</col>
+			<col>publication_format_id</col>
+			<col>code</col>
+		</index>
+	</table>
+
+	<!--
+	  *
+	  * TABLE publication_dates
+	  *
+	  -->
+	<table name="publication_dates">
+		<field name="publication_date_id" type="I8">
+			<KEY />
+			<AUTOINCREMENT />
+		</field>
+		<field name="publication_format_id" type="I8">
+			<NOTNULL />
+		</field>
+		<field name="role" type="C2" size="40">
+			<NOTNULL />
+		</field>
+		<field name="date_format" type="C2" size="40">
+			<NOTNULL />
+		</field>
+		<field name="date" type="C2" size="255">
+			<NOTNULL />
+		</field>
+		<index name="publication_dates_pkey">
+			<col>publication_date_id</col>
+			<col>publication_format_id</col>
+			<col>role</col>
+		</index>
+	</table>
+
+	<!--
+	  *
+	  * TABLE sales_rights
+	  *
+	  -->
+	<table name="sales_rights">
+		<field name="sales_rights_id" type="I8">
+			<KEY />
+			<AUTOINCREMENT />
+		</field>
+		<field name="publication_format_id" type="I8">
+			<NOTNULL />
+		</field>
+		<field name="type" type="C2" size="40">
+			<NOTNULL />
+		</field>
+		<!--  ROW is 'rest of world'. ROW sales types have no territories assigned to them -->
+		<field name="row_setting" type="I1">
+			<NOTNULL/>
+			<DEFAULT VALUE="0"/>
+		</field>
+		<field name="countries_included" type="X"/>
+		<field name="countries_excluded" type="X"/>
+		<field name="regions_included" type="X"/>
+		<field name="regions_excluded" type="X"/>
+		<index name="sales_rights_pkey">
+			<col>sales_rights_id</col>
+			<col>publication_format_id</col>
+		</index>
+	</table>
+
+	<!--
+	  *
+	  * TABLE markets
+	  *
+	  -->
+	<table name="markets">
+		<field name="market_id" type="I8">
+			<KEY />
+			<AUTOINCREMENT />
+		</field>
+		<field name="publication_format_id" type="I8">
+			<NOTNULL />
+		</field>
+		<field name="countries_included" type="X"/>
+		<field name="countries_excluded" type="X"/>
+		<field name="regions_included" type="X"/>
+		<field name="regions_excluded" type="X"/>
+		<field name="market_date_role" type="C2" size="40">
+			<NOTNULL />
+		</field>
+		<field name="market_date_format" type="C2" size="40">
+			<NOTNULL />
+		</field>
+		<field name="market_date" type="C2" size="255">
+			<NOTNULL />
+		</field>
+		<field name="price" type="C2" size="255"/>
+		<field name="discount" type="C2" size="255"/>
+		<field name="price_type_code" type="C2" size="255"/>
+		<field name="currency_code" type="C2" size="255"/>
+		<field name="tax_rate_code" type="C2" size="255"/>
+		<field name="tax_type_code" type="C2" size="255"/>
+		<field name="agent_id" type="I8" />
+		<field name="supplier_id" type="I8" />
+		<index name="markets_pkey">
+			<col>market_id</col>
+			<col>publication_format_id</col>
+		</index>
+	</table>
+	
+	<!--
+	  *
+	  * TABLE representatives
+	  *
+	  -->
+	<table name="representatives">
+		<field name="representative_id" type="I8">
+			<KEY />
+			<AUTOINCREMENT />
+		</field>
+		<field name="monograph_id" type="I8">
+			<NOTNULL />
+		</field>
+		<field name="role" type="C2" size="40">
+			<NOTNULL />
+		</field>
+		<field name="representative_id_type" type="C2" size="255"/>
+		<field name="representative_id_value" type="C2" size="255"/>
+		<field name="name" type="C2" size="255"/>
+		<field name="phone" type="C2" size="255"/>
+		<field name="fax" type="C2" size="255"/>
+		<field name="email" type="C2" size="255"/>
+		<field name="url" type="C2" size="255"/>
+		<field name="is_supplier" type="I1">
+			<NOTNULL />
+			<DEFAULT VALUE="1" />
+		</field>
+		<index name="representatives_pkey">
+			<col>representative_id</col>
+			<col>monograph_id</col>
+		</index>
+	</table>
+
+	<!--
+	  *
+	  * TABLE features
+	  *
+	  -->
+	<table name="features">
+		<field name="monograph_id" type="I8">
+			<NOTNULL />
+		</field>
+		<field name="assoc_type" type="I8">
+			<NOTNULL />
+		</field>
+		<field name="assoc_id" type="I8">
+			<NOTNULL />
+		</field>
+		<field name="seq" type="I8">
+			<NOTNULL />
+		</field>
+		<index name="features_pkey">
+			<col>assoc_type</col>
+			<col>assoc_id</col>
+			<col>monograph_id</col>
+			<UNIQUE />
+		</index>
+	</table>
+
+	<!--
+	  *
+	  * TABLE new_releases
+	  *
+	  -->
+	<table name="new_releases">
+		<field name="monograph_id" type="I8">
+			<NOTNULL />
+		</field>
+		<field name="assoc_type" type="I8">
+			<NOTNULL />
+		</field>
+		<field name="assoc_id" type="I8">
+			<NOTNULL />
+		</field>
+		<index name="new_releases_pkey">
+			<col>assoc_type</col>
+			<col>assoc_id</col>
+			<col>monograph_id</col>
+			<UNIQUE />
+		</index>
+	</table>
+
+	<!--
+	  *
+	  * TABLE series
+	  *
+	  -->
+	<table name="series">
+		<field name="series_id" type="I8">
+			<KEY />
+			<AUTOINCREMENT />
+		</field>
+		<field name="press_id" type="I8">
+			<NOTNULL/>
+		</field>
+		<field name="featured" type="I1">
+			<NOTNULL/>
+			<DEFAULT VALUE="0"/>
+		</field>
+		<field name="path" type="C2" size="255">
+			<NOTNULL />
+		</field>
+		<descr>Press series.</descr>
+		<index name="series_press_id">
+			<col>press_id</col>
+		</index>
+		<index name="series_path">
+			<col>press_id</col>
+			<col>path</col>
+			<UNIQUE />
+		</index>
+	</table>
+
+	<!--
+	  *
+	  * TABLE series_settings
+	  *
+	  -->
+	<table name="series_settings">
+		<field name="series_id" type="I8">
+			<NOTNULL />
+		</field>
+		<field name="locale" type="C2" size="5">
+			<NOTNULL />
+			<DEFAULT VALUE=""/>
+		</field>
+		<field name="setting_name" type="C2" size="255">
+			<NOTNULL />
+		</field>
+		<field name="setting_value" type="X"/>
+		<field name="setting_type" type="C2" size="6">
+			<NOTNULL/>
+			<descr>(bool|int|float|string|object)</descr>
+		</field>
+		<descr>Series-specific settings</descr>
+		<index name="series_settings_pkey">
+			<col>series_id</col>
+			<col>locale</col>
+			<col>setting_name</col>
+			<UNIQUE />
+		</index>
+	</table>
+
+	<!--
+	  *
+	  * TABLE series_categories
+	  *
+	  -->
+	<table name="series_categories">
+		<field name="series_id" type="I8">
+			<NOTNULL/>
+		</field>
+		<field name="category_id" type="I8">
+			<NOTNULL/>
+		</field>
+		<descr>Associations for categories within a series.</descr>
+		<index name="series_categories_id">
+			<col>series_id</col>
+			<col>category_id</col>
+			<UNIQUE/>
+		</index>
+	</table>
+
+	<!--
+	  *
+	  * TABLE monograph_categories
+	  *
+	  -->
+	<table name="monograph_categories">
+		<field name="monograph_id" type="I8">
+			<NOTNULL/>
+		</field>
+		<field name="category_id" type="I8">
+			<NOTNULL/>
+		</field>
+		<descr>Associations for categories and monographs.</descr>
+		<index name="monograph_categories_id">
+			<col>monograph_id</col>
+			<col>category_id</col>
+			<UNIQUE/>
+		</index>
+	</table>
+
+	<!--
+	  *
+	  * TABLE series_editors
+	  *
+	  -->
+	<table name="series_editors">
+		<field name="press_id" type="I8">
+			<NOTNULL />
+		</field>
+		<field name="series_id" type="I8">
+			<NOTNULL />
+		</field>
+		<field name="user_id" type="I8">
+			<NOTNULL />
+		</field>
+		<field name="can_edit" type="I1">
+			<NOTNULL />
+			<DEFAULT VALUE="1" />
+		</field>
+		<field name="can_review" type="I1">
+			<NOTNULL />
+			<DEFAULT VALUE="1" />
+		</field>
+		<descr>Assignments of series editors to series.</descr>
+		<index name="series_editors_press_id">
+			<col>press_id</col>
+		</index>
+		<index name="series_editors_series_id">
+			<col>series_id</col>
+		</index>
+		<index name="series_editors_user_id">
+			<col>user_id</col>
+		</index>
+		<index name="series_editors_pkey">
+			<col>press_id</col>
+			<col>series_id</col>
+			<col>user_id</col>
+			<UNIQUE />
+		</index>
+	</table>
+
+	<!--
+	  *
+	  * TABLE genres
+	  *
+	  -->
+	<table name="genres">
+		<field name="genre_id" type="I8">
+			<KEY/>
+			<AUTOINCREMENT/>
+		</field>
+		<field name="press_id" type="I8">
+			<NOTNULL />
+		</field>
+		<field name="sortable" type="I1">
+			<NOTNULL/>
+			<DEFAULT VALUE="1"/>
+		</field>
+		<field name="enabled" type="I1">
+			<NOTNULL/>
+			<DEFAULT VALUE="1"/>
+		</field>
+		<field name="category" type="I8">
+			<NOTNULL/>
+			<DEFAULT VALUE="1"/>
+		</field>
+		<field name="entry_key" type="C2" size="30"/>
+		<descr>A press' monograph file genres.</descr>
+	</table>
+
+	<!--
+	  *
+	  * TABLE genre_settings
+	  *
+	  -->
+	<table name="genre_settings">
+		<field name="genre_id" type="I8">
+			<NOTNULL />
+		</field>
+		<field name="locale" type="C2" size="5">
+			<NOTNULL />
+			<DEFAULT VALUE=""/>
+		</field>
+		<field name="setting_name" type="C2" size="255">
+			<NOTNULL />
+		</field>
+		<field name="setting_value" type="X"/>
+		<field name="setting_type" type="C2" size="6">
+			<NOTNULL/>
+			<descr>(bool|int|float|string|object)</descr>
+		</field>
+		<descr>Genre settings</descr>
+		<index name="genre_settings_genre_id">
+			<col>genre_id</col>
+		</index>
+		<index name="genre_settings_pkey">
+			<col>genre_id</col>
+			<col>locale</col>
+			<col>setting_name</col>
+			<UNIQUE />
+		</index>
+	</table>
+
+	<!--
+	  *
+	  * TABLE edit_assignments
+	  *
+	  -->
+	<table name="edit_assignments">
+		<field name="edit_id" type="I8">
+			<KEY />
+			<AUTOINCREMENT/>
+		</field>
+		<field name="monograph_id" type="I8">
+			<NOTNULL/>
+		</field>
+		<field name="editor_id" type="I8">
+			<NOTNULL/>
+		</field>
+		<field name="can_edit" type="I1">
+			<NOTNULL/>
+			<DEFAULT VALUE="1"/>
+		</field>
+		<field name="can_review" type="I1">
+			<NOTNULL/>
+			<DEFAULT VALUE="1"/>
+		</field>
+		<field name="date_assigned" type="T"/>
+		<field name="date_notified" type="T"/>
+		<field name="date_underway" type="T"/>
+		<descr>Editing assignments.</descr>
+		<index name="edit_assignments_monograph_id">
+			<col>monograph_id</col>
+		</index>
+		<index name="edit_assignments_editor_id">
+			<col>editor_id</col>
+		</index>
+	</table>
+	
+	<!--
+	  *
+	  * TABLE edit_decisions
+	  *
+	  -->
+	<table name="edit_decisions">
+		<field name="edit_decision_id" type="I8">
+			<KEY />
+			<AUTOINCREMENT/>
+		</field>
+		<field name="monograph_id" type="I8">
+			<NOTNULL/>
+		</field>
+		<field name="review_round_id" type="I8">
+			<NOTNULL/>
+		</field>
+		<field name="stage_id" type="I8" />
+		<field name="round" type="I1">
+			<NOTNULL/>
+		</field>
+		<field name="editor_id" type="I8">
+			<NOTNULL/>
+		</field>
+		<field name="decision" type="I1">
+			<NOTNULL/>
+		</field>
+		<field name="date_decided" type="T">
+			<NOTNULL/>
+		</field>
+		<descr>Editor decisions.</descr>
+		<index name="edit_decisions_monograph_id">
+			<col>monograph_id</col>
+		</index>
+		<index name="edit_decisions_editor_id">
+			<col>editor_id</col>
+		</index>
+	</table>
+	
+	<!--
+	  *
+	  * TABLE monographs
+	  *
+	  -->
+	<table name="monographs">
+		<field name="monograph_id" type="I8">
+			<KEY />
+			<AUTOINCREMENT />
+		</field>
+		<field name="locale" type="C2" size="5" />
+		<field name="user_id" type="I8">
+			<NOTNULL />
+		</field>
+		<field name="press_id" type="I8">
+			<NOTNULL />
+		</field>
+		<field name="series_id" type="I8" />
+		<field name="series_position" type="C2" size="255" />
+		<field name="edited_volume" type="I1">
+			<NOTNULL/>
+			<DEFAULT VALUE="0"/>
+		</field>
+		<field name="language" type="C2" size="10">
+			<DEFAULT VALUE="en"/>
+		</field>
+		<field name="comments_to_ed" type="X"/>
+		<field name="date_submitted" type="T"/>
+		<field name="last_modified" type="T"/>
+		<field name="date_status_modified" type="T"/>
+		<field name="status" type="I1">
+			<NOTNULL/>
+			<DEFAULT VALUE="1"/>
+		</field>
+		<field name="submission_progress" type="I1">
+			<NOTNULL/>
+			<DEFAULT VALUE="1"/>
+		</field>
+		<field name="pages" type="C2" size="255"/>
+		<field name="fast_tracked" type="I1">
+			<NOTNULL/>
+			<DEFAULT VALUE="0"/>
+		</field>
+		<field name="hide_author" type="I1">
+			<NOTNULL/>
+			<DEFAULT VALUE="0"/>
+		</field>
+		<field name="comments_status" type="I1">
+			<NOTNULL/>
+			<DEFAULT VALUE="0"/>
+		</field>
+		<field name="stage_id" type="I8">
+			<NOTNULL/>
+			<DEFAULT VALUE="1"/>
+		</field>
+		<descr>Monographs.</descr>
+		<index name="monographs_user_id">
+			<col>user_id</col>
+		</index>
+		<index name="monographs_press_id">
+			<col>press_id</col>
+		</index>
+		<index name="monographs_series_id">
+			<col>series_id</col>
+		</index>
+	</table>
+
+	<!--
+	  *
+	  * TABLE published_monograph
+	  *
+	  -->
+	<table name="published_monographs">
+		<field name="pub_id" type="I8">
+			<KEY />
+			<AUTOINCREMENT/>
+			<!-- Deprecated -->
+		</field>
+		<field name="monograph_id" type="I8">
+			<NOTNULL/>
+		</field>
+		<field name="date_published" type="T"/>
+		<field name="audience" type="C2" size="255"/>
+		<field name="audience_range_qualifier" type="C2" size="255"/>
+		<field name="audience_range_from" type="C2" size="255"/>
+		<field name="audience_range_to" type="C2" size="255"/>
+		<field name="audience_range_exact" type="C2" size="255"/>
+		<field name="cover_image" type="X"/>
+		<descr>Published monographs</descr>
+		<index name="published_monographs_monograph_id">
+			<col>monograph_id</col>
+			<UNIQUE/>
+		</index>
+	</table>
+
+	<!--
+	  *
+	  * TABLE publication_formats
+	  *
+	  -->
+	<table name="publication_formats">
+		<field name="publication_format_id" type="I8">
+			<KEY />
+			<AUTOINCREMENT/>
+		</field>
+		<field name="monograph_id" type="I8">
+			<NOTNULL/>
+		</field>
+		<field name="physical_format" type="I1">
+			<DEFAULT VALUE="1"/>
+		</field>
+		<field name="entry_key" type="C2" size="64">
+			<NOTNULL/>
+		</field>
+		<field name="seq" type="F">
+			<NOTNULL/>
+			<DEFAULT VALUE="0"/>
+		</field>
+		<field name="file_size" type="C2" size="255"/>
+		<field name="front_matter" type="C2" size="255"/>
+		<field name="back_matter" type="C2" size="255"/>
+		<field name="height" type="C2" size="255"/>
+		<field name="height_unit_code" type="C2" size="255"/>
+		<field name="width" type="C2" size="255"/>
+		<field name="width_unit_code" type="C2" size="255"/>
+		<field name="thickness" type="C2" size="255"/>
+		<field name="thickness_unit_code" type="C2" size="255"/>
+		<field name="weight" type="C2" size="255"/>
+		<field name="weight_unit_code" type="C2" size="255"/>
+		<field name="product_composition_code" type="C2" size="255"/>
+		<field name="product_form_detail_code" type="C2" size="255"/>
+		<field name="country_manufacture_code" type="C2" size="255" />
+		<field name="imprint" type="C2" size="255"/>
+		<field name="product_availability_code" type="C2" size="255"/>
+		<field name="technical_protection_code" type="C2" size="255"/>
+		<field name="returnable_indicator_code" type="C2" size="255"/>
+		<field name="is_available" type="I1">
+			<NOTNULL />
+			<DEFAULT VALUE="0" />
+		</field>
+		<descr>Publication formats assigned to published monographs</descr>
+		<index name="publication_format_monograph_id">
+			<col>monograph_id</col>
+		</index>
+	</table>
+
+	<!--
+	  *
+	  * TABLE published_monograph_publication_format_settings
+	  *
+	  -->
+	<table name="publication_format_settings">
+		<field name="publication_format_id" type="I8">
+			<NOTNULL />
+		</field>
+		<field name="locale" type="C2" size="5">
+			<NOTNULL />
+			<DEFAULT VALUE=""/>
+		</field>
+		<field name="setting_name" type="C2" size="255">
+			<NOTNULL />
+		</field>
+		<field name="setting_value" type="X"/>
+		<field name="setting_type" type="C2" size="6">
+			<NOTNULL/>
+			<descr>(bool|int|float|string|object)</descr>
+		</field>
+		<descr>Publication Format metadata.</descr>
+		<index name="publication_format_id_key">
+			<col>publication_format_id</col>
+		</index>
+		<index name="publication_format_settings_pkey">
+			<col>publication_format_id</col>
+			<col>locale</col>
+			<col>setting_name</col>
+			<UNIQUE/>
+		</index>
+	</table>
+
+	<!--
+	  *
+	  * TABLE monograph_artwork_files
+	  *
+	  -->
+	<table name="monograph_artwork_files">
+		<field name="file_id" type="I8">
+			<KEY />
+		</field>
+		<field name="revision" type="I8">
+			<KEY />
+		</field>
+		<field name="caption" type="X"/>
+		<field name="credit" type="C2" size="255"/>
+		<field name="copyright_owner" type="C2" size="255"/>
+		<field name="copyright_owner_contact" type="X"/>
+		<field name="permission_terms" type="X"/>
+		<field name="permission_file_id" type="I8"/>
+		<field name="chapter_id" type="I8"/>
+		<field name="contact_author" type="I8"/>
+		<descr>Book visuals.</descr>
+	</table>
+
+	<!--
+	  *
+	  * TABLE monograph_settings
+	  *
+	  -->
+	<table name="monograph_settings">
+		<field name="monograph_id" type="I8">
+			<NOTNULL />
+		</field>
+		<field name="locale" type="C2" size="5">
+			<NOTNULL />
+			<DEFAULT VALUE=""/>
+		</field>
+		<field name="setting_name" type="C2" size="255">
+			<NOTNULL />
+		</field>
+		<field name="setting_value" type="X"/>
+		<field name="setting_type" type="C2" size="6">
+			<NOTNULL/>
+			<descr>(bool|int|float|string|object)</descr>
+		</field>
+		<descr>Monograph metadata.</descr>
+		<index name="monograph_settings_monograph_id">
+			<col>monograph_id</col>
+		</index>
+		<index name="monograph_settings_pkey">
+			<col>monograph_id</col>
+			<col>locale</col>
+			<col>setting_name</col>
+			<UNIQUE/>
+		</index>
+	</table>
+
+	<!--
+	  *
+	  * TABLE monograph_comments
+	  *
+	  -->
+	<table name="monograph_comments">
+		<field name="comment_id" type="I8">
+			<KEY />
+			<AUTOINCREMENT/>
+		</field>
+		<field name="comment_type" type="I8"/>
+		<field name="role_id" type="I8">
+			<NOTNULL/>
+		</field>
+		<field name="monograph_id" type="I8">
+			<NOTNULL/>
+		</field>
+		<field name="assoc_id" type="I8">
+			<NOTNULL/>
+		</field>
+		<field name="author_id" type="I8">
+			<NOTNULL/>
+		</field>
+		<field name="comment_title" type="C2" size="90">
+			<NOTNULL/>
+		</field>
+		<field name="comments" type="X"/>
+		<field name="date_posted" type="T"/>
+		<field name="date_modified" type="T"/>
+		<field name="viewable" type="I1" />
+		<descr>Comments posted on monographs.</descr>
+		<index name="monograph_comments_monograph_id">
+			<col>monograph_id</col>
+		</index>
+	</table>
+
+	<!--
+	  *
+	  * TABLE monograph_galleys
+	  *
+	  -->
+	<table name="monograph_galleys">
+		<field name="galley_id" type="I8">
+			<KEY />
+			<AUTOINCREMENT/>
+		</field>
+		<field name="public_galley_id" type="C2" size="255" />
+		<field name="locale" type="C2" size="5"/>
+		<field name="monograph_id" type="I8">
+			<NOTNULL/>
+		</field>
+		<field name="file_id" type="I8">
+			<NOTNULL/>
+		</field>
+		<field name="assignment_id" type="I8"/>
+		<field name="html_galley" type="I1">
+			<NOTNULL/>
+			<DEFAULT VALUE="0"/>
+		</field>
+		<field name="style_file_id" type="I8"/>
+		<field name="seq" type="F">
+			<NOTNULL/>
+			<DEFAULT VALUE="0"/>
+		</field>
+		<field name="views" type="I4">
+			<NOTNULL/>
+			<DEFAULT VALUE="0"/>
+		</field>
+		<descr>Monograph galleys.</descr>
+		<index name="monograph_galleys_monograph_id">
+			<col>monograph_id</col>
+		</index>
+		<index name="monograph_galleys_public_id">
+			<col>public_galley_id</col>
+			<col>monograph_id</col>
+			<UNIQUE/>
+		</index>
+	</table>
+
+	<!--
+	  *
+	  * TABLE monograph_html_galley_images
+	  *
+	  -->
+	<table name="monograph_html_galley_images">
+		<field name="galley_id" type="I8">
+			<NOTNULL />
+		</field>
+		<field name="file_id" type="I8">
+			<NOTNULL />
+		</field>
+		<descr>Images associated with a monograph HTML galley.</descr>
+		<index name="monograph_html_galley_images_pkey">
+			<col>galley_id</col>
+			<col>file_id</col>
+			<UNIQUE/>
+		</index>
+	</table>
+
+	<!--
+	  *
+	  * TABLE monograph_files
+	  *
+	  -->
+	<table name="monograph_files">
+		<field name="file_id" type="I8">
+			<KEY />
+			<AUTOINCREMENT/>
+		</field>
+		<field name="revision" type="I8">
+			<KEY />
+		</field>
+		<field name="source_file_id" type="I8" />
+		<field name="source_revision" type="I8" />
+		<field name="monograph_id" type="I8">
+			<NOTNULL/>
+		</field>
+		<field name="file_type" type="C2" size="255">
+			<NOTNULL/>
+		</field>
+		<field name="genre_id" type="I8" />
+		<field name="file_size" type="I8">
+			<NOTNULL/>
+		</field>
+		<field name="original_file_name" type="C2" size="127"/>
+		<field name="file_stage" type="I8">
+			<NOTNULL/>
+		</field>
+		<field name="direct_sales_price" type="C2" size="255"/>
+		<field name="viewable" type="I1" />
+		<field name="date_uploaded" type="T">
+			<NOTNULL/>
+		</field>
+		<field name="date_modified" type="T">
+			<NOTNULL/>
+		</field>
+		<field name="user_group_id" type="I8" />
+		<field name="uploader_user_id" type="I8" />
+		<field name="assoc_type" type="I8"/>
+		<field name="assoc_id" type="I8"/>
+		<descr>Files associated with monograph. Includes submission files, etc.</descr>
+		<index name="monograph_files_monograph_id">
+			<col>monograph_id</col>
+		</index>
+	</table>
+
+	<!--
+	  *
+	  * TABLE monograph_file_settings
+	  *
+	  -->
+	<table name="monograph_file_settings">
+		<field name="file_id" type="I8">
+			<NOTNULL />
+		</field>
+		<field name="locale" type="C2" size="5">
+			<NOTNULL />
+			<DEFAULT VALUE=""/>
+		</field>
+		<field name="setting_name" type="C2" size="255">
+			<NOTNULL />
+		</field>
+		<field name="setting_value" type="X"/>
+		<field name="setting_type" type="C2" size="6">
+			<NOTNULL/>
+			<descr>(bool|int|float|string|object|date)</descr>
+		</field>
+		<descr>Article supplementary file metadata.</descr>
+		<index name="monograph_file_settings_id">
+			<col>file_id</col>
+		</index>
+		<index name="monograph_file_settings_pkey">
+			<col>file_id</col>
+			<col>locale</col>
+			<col>setting_name</col>
+			<UNIQUE/>
+		</index>
+	</table>
+
+	<!--
+	  *
+	  * TABLE monograph_chapters
+	  *
+	  -->
+	<table name="monograph_chapters">
+		<field name="chapter_id" type="I8">
+			<KEY />
+			<AUTOINCREMENT />
+		</field>
+		<field name="monograph_id" type="I8">
+			<NOTNULL />
+		</field>
+		<field name="chapter_seq" type="F">
+			<NOTNULL />
+			<DEFAULT VALUE="0"/>
+		</field>
+		<index name="chapters_chapter_id">
+			<col>chapter_id</col>
+		</index>
+		<index name="chapters_monograph_id">
+			<col>monograph_id</col>
+		</index>
+	</table>
+
+	<!--
+	  *
+	  * TABLE monograph_chapter_settings
+	  *
+	  -->
+	<table name="monograph_chapter_settings">
+		<field name="chapter_id" type="I8">
+			<NOTNULL />
+		</field>
+		<field name="locale" type="C2" size="5">
+			<NOTNULL />
+			<DEFAULT VALUE=""/>
+		</field>
+		<field name="setting_name" type="C2" size="255">
+			<NOTNULL />
+		</field>
+		<field name="setting_value" type="X"/>
+		<field name="setting_type" type="C2" size="6">
+			<NOTNULL/>
+			<descr>(bool|int|float|string|object)</descr>
+		</field>
+		<descr>Language dependent monograph chapter metadata.</descr>
+		<index name="monograph_chapter_settings_chapter_id">
+			<col>chapter_id</col>
+		</index>
+		<index name="monograph_chapter_settings_pkey">
+			<col>chapter_id</col>
+			<col>locale</col>
+			<col>setting_name</col>
+			<UNIQUE/>
+		</index>
+	</table>
+
+	<!--
+	  *
+	  * TABLE monograph_chapter_authors
+	  *
+	  -->
+	<table name="monograph_chapter_authors">
+		<field name="author_id" type="I8">
+			<NOTNULL />
+		</field>
+		<field name="chapter_id" type="I8">
+			<NOTNULL />
+		</field>
+		<field name="monograph_id" type="I8">
+			<NOTNULL />
+		</field>
+		<field name="primary_contact" type="I1">
+			<NOTNULL/>
+			<DEFAULT VALUE="0"/>
+		</field>
+		<field name="seq" type="F">
+			<NOTNULL />
+			<DEFAULT VALUE="0"/>
+		</field>
+		<index name="chapter_authors_pkey">
+			<col>author_id</col>
+			<col>chapter_id</col>
+			<UNIQUE />
+		</index>
+	</table>
+
+	<!--
+	 *
+	 * TABLE monograph_search_keyword_list
+	 *
+	 -->
+	<table name="monograph_search_keyword_list">
+		<field name="keyword_id" type="I8">
+			<KEY />
+			<AUTOINCREMENT/>
+		</field>
+		<field name="keyword_text" type="C2" size="60">
+			<NOTNULL/>
+		</field>
+		<descr>List of all keywords.</descr>
+		<index name="monograph_search_keyword_text">
+			<col>keyword_text</col>
+			<UNIQUE/>
+		</index>
+	</table>
+
+	<!--
+	 *
+	 * TABLE monograph_search_objects
+	 *
+	 -->
+	<table name="monograph_search_objects">
+		<field name="object_id" type="I8">
+			<KEY />
+			<AUTOINCREMENT/>
+		</field>
+		<field name="monograph_id" type="I8">
+			<NOTNULL />
+		</field>
+		<field name="type" type="I4">
+			<NOTNULL />
+			<descr>Type of item. E.g., abstract, fulltext, etc.</descr>
+		</field>
+		<field name="assoc_id" type="I8">
+			<descr>Optional ID of an associated record (e.g., a file_id)</descr>
+		</field>
+		<descr>Indexed objects.</descr>
+	</table>
+
+	<!--
+	 *
+	 * TABLE monograph_search_object_keywords
+	 *
+	 -->
+	<table name="monograph_search_object_keywords">
+		<field name="object_id" type="I8">
+			<NOTNULL />
+		</field>
+		<field name="keyword_id" type="I8">
+			<NOTNULL />
+		</field>
+		<field name="pos" type="I4">
+			<NOTNULL />
+			<descr>Word position of the keyword in the object.</descr>
+		</field>
+		<descr>Keyword occurrences for each indexed object.</descr>
+		<index name="monograph_search_object_keywords_keyword_id">
+			<col>keyword_id</col>
+		</index>
+		<index name="monograph_search_object_keywords_pkey">
+			<col>object_id</col>
+			<col>pos</col>
+			<UNIQUE />
+		</index>
+	</table>
+
+	<!--
+	  *
+	  * TABLE monograph_event_log
+	  *
+	  -->
+	<table name="monograph_event_log">
+		<field name="log_id" type="I8">
+			<KEY />
+			<AUTOINCREMENT/>
+		</field>
+		<field name="monograph_id" type="I8">
+			<NOTNULL/>
+		</field>
+		<field name="user_id" type="I8">
+			<NOTNULL/>
+		</field>
+		<field name="date_logged" type="T">
+			<NOTNULL/>
+		</field>
+		<field name="ip_address" type="C2" size="15">
+			<NOTNULL/>
+		</field>
+		<field name="log_level" type="C2" size="1"/>
+		<field name="event_type" type="I8"/>
+		<field name="assoc_type" type="I8"/>
+		<field name="assoc_id" type="I8"/>
+		<field name="message" type="X"/>
+		<descr>A log of all events associated with a submission.</descr>
+		<index name="monograph_event_log_monograph_id">
+			<col>monograph_id</col>
+		</index>
+	</table>
+
+	<!--
+	  *
+	  * TABLE notification_status
+	  *
+	  -->
+	<table name="notification_status">
+		<field name="press_id" type="I8">
+			<NOTNULL />
+		</field>
+		<field name="user_id" type="I8">
+			<NOTNULL />
+		</field>
+		<descr>User "mail notifications to my account" flags</descr>
+		<index name="notification_status_pkey">
+			<col>press_id</col>
+			<col>user_id</col>
+			<UNIQUE />
+		</index>
+	</table>
+
+	<!--
+	  *
+	  * TABLE plugin_settings
+	  *
+	  -->
+	<table name="plugin_settings">
+		<field name="plugin_name" type="C2" size="80">
+			<NOTNULL />
+		</field>
+		<field name="locale" type="C2" size="5">
+			<NOTNULL />
+			<DEFAULT VALUE=""/>
+		</field>
+		<field name="press_id" type="I8">
+			<NOTNULL />
+		</field>
+		<field name="setting_name" type="C2" size="80">
+			<NOTNULL />
+		</field>
+		<field name="setting_value" type="X"/>
+		<field name="setting_type" type="C2" size="6">
+			<NOTNULL/>
+			<descr>(bool|int|float|string|object)</descr>
+		</field>
+		<descr>Press settings.</descr>
+	</table>
+
+	<!--
+	  *
+	  * TABLE presses
+	  *
+	  -->
+	<table name="presses">
+		<field name="press_id" type="I8">
+			<KEY />
+			<AUTOINCREMENT/>
+		</field>
+		<field name="path" type="C2" size="32">
+			<NOTNULL/>
+		</field>
+		<field name="seq" type="F">
+			<NOTNULL/>
+			<DEFAULT VALUE="0"/>
+		</field>
+		<field name="primary_locale" type="C2" size="5">
+			<NOTNULL/>
+		</field>
+		<field name="enabled" type="I1">
+			<NOTNULL/>
+			<DEFAULT VALUE="1"/>
+		</field>
+		<descr>Presses and basic press settings.</descr>
+		<index name="press_path">
+			<col>path</col>
+			<UNIQUE />
+		</index>
+	</table>
+
+	<!--
+	  *
+	  * TABLE press_settings
+	  *
+	  -->
+	<table name="press_defaults">
+		<field name="press_id" type="I8">
+			<NOTNULL/>
+		</field>
+		<field name="locale" type="C2" size="5">
+			<NOTNULL/>
+			<DEFAULT VALUE=""/>
+		</field>
+		<field name="assoc_type" type="I8"/>
+		<field name="entry_key" type="C2" size="30"/>
+		<field name="setting_name" type="C2" size="255">
+			<NOTNULL/>
+		</field>
+		<field name="setting_value" type="X"/>
+		<field name="setting_type" type="C2" size="6">
+			<NOTNULL/>
+			<descr>(bool|int|float|string|object)</descr>
+		</field>
+		<descr>Press settings.</descr>
+		<index name="press_settings_press_id">
+			<col>press_id</col>
+		</index>
+		<index name="press_settings_pkey">
+			<col>press_id</col>
+			<col>locale</col>
+			<col>setting_name</col>
+			<col>entry_key</col>
+			<UNIQUE />
+		</index>
+	</table>
+
+	<!--
+	  *
+	  * TABLE press_settings
+	  *
+	  -->
+	<table name="press_settings">
+		<field name="press_id" type="I8">
+			<NOTNULL/>
+		</field>
+		<field name="locale" type="C2" size="5">
+			<NOTNULL/>
+			<DEFAULT VALUE=""/>
+		</field>
+		<field name="setting_name" type="C2" size="255">
+			<NOTNULL/>
+		</field>
+		<field name="setting_value" type="X"/>
+		<field name="setting_type" type="C2" size="6">
+			<NOTNULL/>
+			<descr>(bool|int|float|string|object)</descr>
+		</field>
+		<descr>Press settings.</descr>
+		<index name="press_settings_press_id">
+			<col>press_id</col>
+		</index>
+		<index name="press_settings_pkey">
+			<col>press_id</col>
+			<col>locale</col>
+			<col>setting_name</col>
+			<UNIQUE />
+		</index>
+	</table>
+
+	<!--
+	  *
+	  * TABLE production_assignments
+	  *
+	  -->
+	<table name="production_assignments">
+		<field name="assignment_id" type="I8">
+			<KEY />
+			<AUTOINCREMENT />
+		</field>
+		<field name="monograph_id" type="I8">
+			<NOTNULL/>
+		</field>
+		<field name="type" type="I8" />
+		<field name="label" type="C2" size="64"/>
+		<descr>Production, layout, and design assignments.</descr>
+		<index name="production_assignments_assignment_id">
+			<col>assignment_id</col>
+		</index>
+	</table>
+
+	<!--
+	  *
+	  * TABLE cataloguing_metadata_fields
+	  *
+	  -->
+	<table name="cataloguing_metadata_fields">
+		<field name="field_id" type="I8">
+			<KEY/>
+			<AUTOINCREMENT/>
+		</field>
+		<field name="press_id" type="I8">
+			<NOTNULL />
+		</field>
+		<field name="enabled" type="I1">
+			<NOTNULL/>
+			<DEFAULT VALUE="1"/>
+		</field>
+		<descr>A press' cataloguing metadata fields.</descr>
+	</table>
+
+	<!--
+	  *
+	  * TABLE cataloguing_metadata_field_settings
+	  *
+	  -->
+	<table name="cataloguing_metadata_field_settings">
+		<field name="field_id" type="I8">
+			<NOTNULL />
+		</field>
+		<field name="locale" type="C2" size="5">
+			<NOTNULL />
+			<DEFAULT VALUE=""/>
+		</field>
+		<field name="setting_name" type="C2" size="255">
+			<NOTNULL />
+		</field>
+		<field name="setting_value" type="X"/>
+		<field name="setting_type" type="C2" size="6">
+			<NOTNULL/>
+			<descr>(bool|int|float|string|object)</descr>
+		</field>
+		<descr>Cataloguing metadata field settings</descr>
+		<index name="cataloguing_metadata_field_settings_field_id">
+			<col>field_id</col>
+		</index>
+		<index name="cataloguing_metadata_field_settings_pkey">
+			<col>field_id</col>
+			<col>locale</col>
+			<col>setting_name</col>
+			<UNIQUE />
+		</index>
+	</table>
+
+	<!--
+	  *
+	  * TABLE review_round_files
+	  *
+	  -->
+	<table name="review_round_files">
+		<field name="monograph_id" type="I8">
+			<NOTNULL/>
+		</field>
+		<field name="review_round_id" type="I8">
+			<NOTNULL/>
+		</field>
+		<field name="stage_id" type="I1">
+			<NOTNULL/>
+		</field>
+		<field name="file_id" type="I8">
+			<NOTNULL/>
+		</field>
+		<field name="revision" type="I8">
+			<NOTNULL/>
+			<DEFAULT VALUE="1"/>
+		</field>
+		<descr>Monograph Files for each review round</descr>
+		<index name="review_round_files_monograph_id">
+			<col>monograph_id</col>
+		</index>
+		<index name="review_round_files_pkey">
+			<col>monograph_id</col>
+			<col>review_round_id</col>
+			<col>file_id</col>
+			<col>revision</col>
+			<UNIQUE/>
+		</index>
+	</table>
+
+	<!--
+	  *
+	  * TABLE user_groups
+	  *
+	  -->
+	<table name="user_groups">
+		<field name="user_group_id" type="I8">
+			<KEY />
+			<AUTOINCREMENT/>
+		</field>
+		<field name="context_id" type="I8">
+			<NOTNULL />
+		</field>
+		<field name="role_id" type="I8">
+			<NOTNULL />
+		</field>
+		<field name="path" type="C2" size="30">
+			<NOTNULL />
+		</field>
+		<field name="is_default" type="I1">
+			<NOTNULL/>
+			<DEFAULT VALUE="0"/>
+		</field>
+		<descr>User groups for a press.</descr>
+		<index name="user_groups_user_group_id">
+			<col>user_group_id</col>
+		</index>
+		<index name="user_groups_context_id">
+			<col>context_id</col>
+		</index>
+		<index name="user_groups_role_id">
+			<col>role_id</col>
+		</index>
+		<index name="user_groups_path">
+			<col>path</col>
+		</index>
+	</table>
+
+	<!--
+	  *
+	  * TABLE user_group_settings
+	  *
+	  -->
+	<table name="user_group_settings">
+		<field name="user_group_id" type="I8">
+			<NOTNULL />
+		</field>
+		<field name="locale" type="C2" size="5">
+			<NOTNULL />
+			<DEFAULT VALUE=""/>
+		</field>
+		<field name="setting_name" type="C2" size="255">
+			<NOTNULL />
+		</field>
+		<field name="setting_value" type="X"/>
+		<field name="setting_type" type="C2" size="6">
+			<NOTNULL/>
+			<descr>(bool|int|float|string|object)</descr>
+		</field>
+		<descr>User Group-specific settings</descr>
+		<index name="user_group_settings_pkey">
+			<col>user_group_id</col>
+			<col>locale</col>
+			<col>setting_name</col>
+			<UNIQUE />
+		</index>
+	</table>
+
+	<!--
+	  *
+	  * TABLE user_user_groups
+	  *
+	  -->
+	<table name="user_user_groups">
+		<field name="user_group_id" type="I8">
+			<NOTNULL />
+		</field>
+		<field name="user_id" type="I8">
+			<NOTNULL />
+		</field>
+		<descr>User group assignments (mapping of user to user groups)</descr>
+		<index name="user_user_groups_user_group_id">
+			<col>user_group_id</col>
+		</index>
+		<index name="user_user_groups_user_id">
+			<col>user_id</col>
+		</index>
+		<index name="user_user_groups_pkey">
+			<col>user_group_id</col>
+			<col>user_id</col>
+			<UNIQUE />
+		</index>
+	</table>
+
+	<!--
+	  *
+	  * TABLE user_group_stage_assignment
+	  *
+	  -->
+	<table name="user_group_stage">
+		<field name="press_id" type="I8">
+			<NOTNULL />
+		</field>
+		<field name="user_group_id" type="I8">
+			<NOTNULL />
+		</field>
+		<field name="stage_id" type="I8">
+			<NOTNULL />
+		</field>
+		<descr>User groups assignments to stages in the workflow</descr>
+		<index name="user_group_stage_press_id">
+			<col>press_id</col>
+		</index>
+		<index name="user_group_stage_user_group_id">
+			<col>user_group_id</col>
+		</index>
+		<index name="user_group_stage_stage_id">
+			<col>stage_id</col>
+		</index>
+		<index name="user_group_stage_pkey">
+			<col>press_id</col>
+			<col>user_group_id</col>
+			<col>stage_id</col>
+			<UNIQUE />
+		</index>
+	</table>
+
+	<!--
+	  *
+	  * TABLE stage_assignments
+	  *
+	  -->
+	<table name="stage_assignments">
+		<field name="stage_assignment_id" type="I8">
+			<KEY/>
+			<AUTOINCREMENT/>
+		</field>
+		<field name="submission_id" type="I8">
+			<NOTNULL/>
+		</field>
+		<field name="user_group_id" type="I8">
+			<NOTNULL/>
+		</field>
+		<field name="user_id" type="I8">
+			<NOTNULL/>
+		</field>
+		<field name="date_assigned" type="T">
+			<NOTNULL/>
+		</field>
+		<descr>Stage Assignments</descr>
+		<index name="stage_assignment">
+			<col>submission_id</col>
+			<col>user_group_id</col>
+			<col>user_id</col>
+			<UNIQUE />
+		</index>
+		<index name="stage_assignments_submission_id">
+			<col>submission_id</col>
+		</index>
+		<index name="stage_assignments_user_group_id">
+			<col>user_group_id</col>
+		</index>
+		<index name="stage_assignments_user_id">
+			<col>user_id</col>
+		</index>
+	</table>
+
+	<!--
+	  *
+	  * TABLE views
+	  *
+	  -->
+	<table name="views">
+		<field name="assoc_type" type="I8">
+			<NOTNULL />
+		</field>
+		<field name="assoc_id" type="C2" size="32">
+			<NOTNULL />
+		</field>
+		<field name="user_id" type="I8" />
+		<field name="date_last_viewed" type="T" />
+		<descr>Tracking of views for various types of objects such as files, reviews, etc</descr>
+		<index name="views_pkey">
+			<col>assoc_type</col>
+			<col>assoc_id</col>
+			<col>user_id</col>
+			<UNIQUE />
+		</index>
+	</table>
+
+	<!--
+	  *
+	  * TABLE library_files
+	  *
+	  -->
+	<table name="library_files">
+		<field name="file_id" type="I8">
+			<KEY/>
+			<AUTOINCREMENT/>
+		</field>
+		<field name="press_id" type="I8">
+			<NOTNULL/>
+		</field>
+		<field name="file_name" type="C2" size="255">
+			<NOTNULL/>
+		</field>
+		<field name="original_file_name" type="C2" size="255">
+			<NOTNULL/>
+		</field>
+		<field name="file_type" type="C2" size="255">
+			<NOTNULL/>
+		</field>
+		<field name="file_size" type="I8">
+			<NOTNULL/>
+		</field>
+		<field name="type" type="I1">
+			<NOTNULL/>
+		</field>
+		<field name="date_uploaded" type="T">
+			<NOTNULL/>
+		</field>
+		<field name="date_modified" type="T">
+			<NOTNULL/>
+		</field>
+		<descr>Library files for a press</descr>
+		<index name="library_files_press_id">
+			<col>press_id</col>
+		</index>
+	</table>
+
+	<!--
+	  *
+	  * TABLE library_file_settings
+	  *
+	  -->
+	<table name="library_file_settings">
+		<field name="file_id" type="I8">
+			<NOTNULL />
+		</field>
+		<field name="locale" type="C2" size="5">
+			<NOTNULL />
+			<DEFAULT VALUE=""/>
+		</field>
+		<field name="setting_name" type="C2" size="255">
+			<NOTNULL />
+		</field>
+		<field name="setting_value" type="X"/>
+		<field name="setting_type" type="C2" size="6">
+			<NOTNULL/>
+			<descr>(bool|int|float|string|object|date)</descr>
+		</field>
+		<descr>Library file metadata.</descr>
+		<index name="library_file_settings_id">
+			<col>file_id</col>
+		</index>
+		<index name="library_file_settings_pkey">
+			<col>file_id</col>
+			<col>locale</col>
+			<col>setting_name</col>
+			<UNIQUE/>
+		</index>
+	</table>
+
+	<!--
+	  *
+	  * TABLE spotlights
+	  *
+	  -->
+	<table name="spotlights">
+		<field name="spotlight_id" type="I8">
+			<KEY />
+			<AUTOINCREMENT/>
+		</field>
+		<field name="assoc_type" type="I2">
+			<NOTNULL/>
+		</field>
+		<field name="assoc_id" type="I2">
+			<NOTNULL/>
+		</field>
+		<field name="press_id" type="I8">
+			<NOTNULL/>
+		</field>
+		<field name="location" type="I2">
+			<NOTNULL/>
+		</field>
+		<descr>Spotlights</descr>
+		<index name="spotlights_assoc">
+			<col>assoc_type</col>
+			<col>assoc_id</col>
+		</index>
+	</table>
+	
+	<!--
+	  *
+	  * TABLE spotlight_settings
+	  *
+	  -->
+	<table name="spotlight_settings">
+		<field name="spotlight_id" type="I8">
+			<NOTNULL />
+		</field>
+		<field name="locale" type="C2" size="5">
+			<NOTNULL />
+			<DEFAULT VALUE=""/>
+		</field>
+		<field name="setting_name" type="C2" size="255">
+			<NOTNULL />
+		</field>
+		<field name="setting_value" type="X"/>
+		<field name="setting_type" type="C2" size="6">
+			<NOTNULL/>
+			<descr>(bool|int|float|string|object|date)</descr>
+		</field>
+		<descr>Spotlight metadata.</descr>
+		<index name="spotlight_settings_id">
+			<col>spotlight_id</col>
+		</index>
+		<index name="spotlight_settings_pkey">
+			<col>spotlight_id</col>
+			<col>locale</col>
+			<col>setting_name</col>
+			<UNIQUE/>
+		</index>
+	</table>
+
+	<!--
+	  *
+	  * TABLE queued_payments
+	  *
+	  -->
+	<table name="queued_payments">
+		<field name="queued_payment_id" type="I8">
+			<KEY />
+			<AUTOINCREMENT/>
+		</field>
+		<field name="date_created" type="T">
+			<NOTNULL/>
+		</field>
+		<field name="date_modified" type="T">
+			<NOTNULL/>
+		</field>
+		<field name="expiry_date" type="D" />
+		<field name="payment_data" type="X" />
+		<descr>Logs queued (unfulfilled) payments.</descr>
+	</table>
+
+	<!--
+	  *
+	  * TABLE completed_payments
+	  *
+	  -->
+	<table name="completed_payments">
+		<field name="completed_payment_id" type="I8">
+			<KEY />
+			<AUTOINCREMENT/>
+		</field>
+		<field name="timestamp" type="T">
+			<NOTNULL/>
+		</field>
+		<field name="payment_type" type="I8">
+			<NOTNULL/>
+		</field>
+		<field name="press_id" type="I8">
+			<NOTNULL/>
+		</field>
+		<field name="user_id" type="I8" />
+		<!-- NOTE: assoc_id NOT numeric to incorporate file idents -->
+		<field name="assoc_id" type="C2" size="16" />
+		<field name="amount" type="F">
+			<NOTNULL/>
+		</field>
+		<field name="currency_code_alpha" type="C2" size="3" />
+		<field name="payment_method_plugin_name" type="C2" size="80" />
+		<descr>Logs completed (fulfilled) payments.</descr>
+	</table>
+</schema>

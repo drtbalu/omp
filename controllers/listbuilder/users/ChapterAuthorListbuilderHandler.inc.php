@@ -1,0 +1,197 @@
+<?php
+
+/**
+ * @file controllers/listbuilder/users/ChapterAuthorListbuilderHandler.inc.php
+ *
+ * Copyright (c) 2003-2012 John Willinsky
+ * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
+ *
+ * @class ChapterAuthorListbuilderHandler
+ * @ingroup listbuilder
+ *
+ * @brief Class for adding contributors to a chapter
+ */
+
+import('lib.pkp.classes.controllers.listbuilder.ListbuilderHandler');
+
+class ChapterAuthorListbuilderHandler extends ListbuilderHandler {
+	/** @var integer The chapter ID that we'll filter stage participants on **/
+	var $_chapterId;
+
+	/**
+	 * Constructor
+	 */
+	function ChapterAuthorListbuilderHandler() {
+		parent::ListbuilderHandler();
+		$this->addRoleAssignment(
+			array(ROLE_ID_AUTHOR, ROLE_ID_SERIES_EDITOR, ROLE_ID_PRESS_MANAGER),
+			array('fetch', 'fetchRow', 'fetchOptions', 'save')
+		);
+	}
+
+	//
+	// Getters/Setters
+	//
+	/**
+	 * Get the authorized monograph.
+	 * @return Monograph
+	 */
+	function getMonograph() {
+		return $this->getAuthorizedContextObject(ASSOC_TYPE_MONOGRAPH);
+	}
+
+	/**
+	 * Set the user group id
+	 * @param $chapterId int
+	 */
+	function setChapterId($chapterId) {
+		$this->_chapterId = $chapterId;
+	}
+
+	/**
+	 * Get the user group id
+	 * @return int
+	 */
+	function getChapterId() {
+		return $this->_chapterId;
+	}
+
+	//
+	// Implement template methods from PKPHandler
+	//
+	/**
+	 * @see PKPHandler::authorize()
+	 * @param $request PKPRequest
+	 * @param $args array
+	 * @param $roleAssignments array
+	 */
+	function authorize(&$request, $args, $roleAssignments) {
+		import('classes.security.authorization.OmpSubmissionAccessPolicy');
+		$this->addPolicy(new OmpSubmissionAccessPolicy($request, $args, $roleAssignments));
+		return parent::authorize($request, $args, $roleAssignments);
+	}
+
+	/*
+	 * Configure the grid
+	 * @param PKPRequest $request
+	 */
+	function initialize(&$request) {
+		parent::initialize($request);
+
+		// Add locale keys
+		AppLocale::requireComponents(LOCALE_COMPONENT_OMP_SUBMISSION, LOCALE_COMPONENT_PKP_SUBMISSION);
+
+		// Basic configuration
+		$this->setTitle('submission.submit.addAuthor');
+		$this->setSourceType(LISTBUILDER_SOURCE_TYPE_SELECT);
+		$this->setSaveType(LISTBUILDER_SAVE_TYPE_EXTERNAL);
+		$this->setSaveFieldName('authors');
+
+		// Fetch and authorize chapter
+		$chapterDao =& DAORegistry::getDAO('ChapterDAO');
+		$monograph =& $this->getMonograph();
+		$chapter =& $chapterDao->getChapter(
+			$request->getUserVar('chapterId'),
+			$monograph->getId()
+		);
+		if ($chapter) {
+			// This is an existing chapter
+			$this->setChapterId($chapter->getId());
+		} else {
+			// This is a new chapter
+			$this->setChapterId(null);
+		}
+
+		// Name column
+		$nameColumn = new ListbuilderGridColumn($this, 'name', 'common.name');
+		// We can reuse the User cell provider because getFullName
+		import('controllers.listbuilder.users.UserListbuilderGridCellProvider');
+		$nameColumn->setCellProvider(new UserListbuilderGridCellProvider());
+		$this->addColumn($nameColumn);
+	}
+
+	/**
+	 * @see GridHandler::initFeatures()
+	 */
+	function initFeatures($request, $args) {
+		import('lib.pkp.classes.controllers.grid.feature.OrderListbuilderItemsFeature');
+		return array(new OrderListbuilderItemsFeature());
+	}
+
+	/**
+	 * @see GridDataProvider::getRequestArgs()
+	 */
+	function getRequestArgs() {
+		$monograph =& $this->getMonograph();
+		return array(
+			'monographId' => $monograph->getId(),
+			'chapterId' => $this->getChapterId()
+		);
+	}
+
+	/**
+	 * @see GridHandler::getRowDataElement
+	 * Get the data element that corresponds to the current request
+	 * Allow for a blank $rowId for when creating a not-yet-persisted row
+	 */
+	function getRowDataElement(&$request, $rowId) {
+		// fallback on the parent if a rowId is found
+		if ( !empty($rowId) ) {
+			return parent::getRowDataElement($request, $rowId);
+		}
+		$id = 0;
+		// Otherwise return from the newRowId
+		$authorId = $this->getNewRowId($request); // this is an array:  Example: $authorId['name'] => 25
+		if (isset($authorId['name'])) {
+			$id = (int) $authorId['name'];
+		}
+
+		$authorDao =& DAORegistry::getDAO('AuthorDAO');
+		$monograph =& $this->getMonograph();
+		$author =& $authorDao->getAuthor($id, $monograph->getId());
+		return $author;
+	}
+
+	/**
+	 * @see ListbuilderHandler::getOptions
+	 */
+	function getOptions() {
+		// Initialize the object to return
+		$items = array(
+			array()
+		);
+
+		$monograph =& $this->getMonograph();
+		$authors =& $monograph->getAuthors();
+
+		foreach ($authors as $author) {
+			$items[0][$author->getId()] = $author->getFullName();
+		}
+		unset($authors);
+
+		return $items;
+	}
+
+
+	//
+	// Public methods
+	//
+	/*
+	 * Load the data for the list builder
+	 * @param PKPRequest $request
+	 */
+	function loadData(&$request, $filter) {
+		$monograph =& $this->getMonograph();
+
+		// If it's a new chapter, it has no authors.
+		if (!$this->getChapterId()) return array();
+
+		// Retrieve the contributors associated with this chapter to be displayed in the grid
+		$chapterAuthorDao =& DAORegistry::getDAO('ChapterAuthorDAO');
+		$chapterAuthors =& $chapterAuthorDao->getAuthors($monograph->getId(), $this->getChapterId());
+
+		return $chapterAuthors;
+	}
+}
+
+?>

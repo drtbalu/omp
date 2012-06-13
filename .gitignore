@@ -1,0 +1,11 @@
+config.inc.php
+.DS_Store/
+build
+temp
+/files
+.project
+.project/
+.buildpath
+.settings/
+.htaccess
+te_ST/

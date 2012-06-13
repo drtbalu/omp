@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  * locales.xml
+  *
+  * Copyright (c) 2003-2012 John Willinsky
+  * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
+  *
+  * Locales registry file.
+  *
+  * This file lists all locales available to the system.
+  * (i.e., existing under the locales/ directory)
+  -->
+
+<!DOCTYPE locales SYSTEM "../lib/pkp/dtd/locales.dtd">
+
+<locales>
+	<locale key="en_US" complete="true" name="English" iso639-2b="eng" iso639-3="eng" />
+	<locale key="te_ST" complete="false" name="Test Locale" iso639-2b="tst" iso639-3="tst" />
+</locales>
